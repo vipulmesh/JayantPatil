@@ -1,183 +1,312 @@
-/**
- * Premium Webpage - Interactive Functionality
- * Handles the reveal animation for the secondary image
- */
-
-// Wait for DOM to be fully loaded
+// ===== Smooth Scroll to Form =====
 document.addEventListener('DOMContentLoaded', function() {
-    // Get references to DOM elements
-    const redeemButton = document.getElementById('redeemButton');
-    const secondaryImage = document.getElementById('secondaryImage');
+    const scrollToFormBtn = document.getElementById('scrollToForm');
+    const formSection = document.getElementById('formSection');
+    const successMessage = document.getElementById('successMessage');
+    const googleForm = document.getElementById('googleForm');
+
+    // Smooth scroll to form section
+    if (scrollToFormBtn && formSection) {
+        scrollToFormBtn.addEventListener('click', function() {
+            formSection.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
+    }
+
+    // ===== Form Submission Detection =====
+    // Note: Google Forms don't trigger standard form events when embedded
+    // This is a workaround to detect when user likely submitted the form
     
-    // Track if button has been clicked
-    let isRevealed = false;
+    // Method 1: Listen for URL changes in iframe (limited due to cross-origin)
+    // Method 2: Show success message after a delay when form is interacted with
+    
+    let formInteracted = false;
 
-    /**
-     * Handle the buy button click event
-     */
-    function handleRedeemClick() {
-        // Prevent multiple clicks
-        if (isRevealed) {
-            return;
+    if (googleForm) {
+        // Detect when user interacts with the form
+        window.addEventListener('blur', function() {
+            if (document.activeElement === googleForm) {
+                formInteracted = true;
+            }
+        });
+
+        // Check for Google Forms submission confirmation page
+        // This works by detecting if the iframe URL changes to the confirmation page
+        try {
+            googleForm.addEventListener('load', function() {
+                if (formInteracted) {
+                    // Wait a bit to see if it's the confirmation page
+                    setTimeout(function() {
+                        try {
+                            // Try to detect if it's the confirmation page
+                            // Note: This may not work due to cross-origin restrictions
+                            const iframeContent = googleForm.contentWindow.location.href;
+                            if (iframeContent.includes('formResponse')) {
+                                showSuccessMessage();
+                            }
+                        } catch (e) {
+                            // Cross-origin restriction - this is expected
+                            // You might want to implement alternative detection
+                            console.log('Form submission detection limited by cross-origin policy');
+                        }
+                    }, 1000);
+                }
+            });
+        } catch (e) {
+            console.log('Form event listeners limited by cross-origin policy');
         }
+    }
 
-        // Mark as revealed
-        isRevealed = true;
+    // ===== Alternative: Manual Success Trigger =====
+    // If automatic detection doesn't work, you can add a button
+    // that users click after submitting the form
+    
+    // Uncomment this if you add a manual trigger button
+    /*
+    const manualSuccessBtn = document.getElementById('manualSuccessBtn');
+    if (manualSuccessBtn) {
+        manualSuccessBtn.addEventListener('click', function() {
+            showSuccessMessage();
+        });
+    }
+    */
 
-        // Add visual feedback to button
-        redeemButton.classList.add('clicked');
-        redeemButton.textContent = 'Purchased ✓';
-        redeemButton.setAttribute('aria-pressed', 'true');
-
-        // Reveal the secondary image with animation
-        secondaryImage.classList.add('revealed');
-        secondaryImage.setAttribute('aria-hidden', 'false');
-
-        // Smooth scroll to bring the new image into view
-        setTimeout(() => {
-            secondaryImage.scrollIntoView({
+    // ===== Show Success Message =====
+    function showSuccessMessage() {
+        if (googleForm && successMessage) {
+            // Hide the form
+            googleForm.style.display = 'none';
+            
+            // Show success message
+            successMessage.classList.add('show');
+            
+            // Scroll to success message
+            successMessage.scrollIntoView({ 
                 behavior: 'smooth',
                 block: 'center'
             });
-        }, 300);
 
-        // Optional: Disable button after click
-        setTimeout(() => {
-            redeemButton.disabled = true;
-            redeemButton.style.cursor = 'default';
-        }, 600);
+            // Optional: Add confetti effect or celebration animation
+            createConfetti();
+        }
     }
 
-    /**
-     * Add event listener to the button
-     */
-    if (redeemButton && secondaryImage) {
-        // Click event
-        redeemButton.addEventListener('click', handleRedeemClick);
+    // ===== Confetti Effect =====
+    function createConfetti() {
+        const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
+        const confettiCount = 50;
 
-        // Keyboard accessibility - Enter and Space keys
-        redeemButton.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                handleRedeemClick();
+        for (let i = 0; i < confettiCount; i++) {
+            setTimeout(function() {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-10px';
+                confetti.style.opacity = '1';
+                confetti.style.borderRadius = '50%';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.zIndex = '9999';
+                confetti.style.transition = 'all 3s ease-out';
+
+                document.body.appendChild(confetti);
+
+                // Animate confetti falling
+                setTimeout(function() {
+                    confetti.style.top = window.innerHeight + 'px';
+                    confetti.style.opacity = '0';
+                    confetti.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+                }, 10);
+
+                // Remove confetti after animation
+                setTimeout(function() {
+                    confetti.remove();
+                }, 3000);
+            }, i * 30);
+        }
+    }
+
+    // ===== Intersection Observer for Scroll Animations =====
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
             }
         });
-    } else {
-        console.error('Required elements not found in the DOM');
-    }
+    }, observerOptions);
 
-    /**
-     * Optional: Add intersection observer for fade-in effects
-     * This enhances the user experience on scroll
-     */
-    if ('IntersectionObserver' in window) {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+    // Observe feature cards for animation on scroll
+    const featureCards = document.querySelectorAll('.feature-card');
+    featureCards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        observer.observe(card);
+    });
 
-        const fadeInObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+    // ===== Button Ripple Effect =====
+    const buttons = document.querySelectorAll('.cta-button, .form-link-button');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+
+            button.appendChild(ripple);
+
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+
+    // ===== Loading State for Iframe =====
+    if (googleForm) {
+        const formWrapper = document.querySelector('.form-wrapper');
+        
+        // Add loading spinner
+        const loadingSpinner = document.createElement('div');
+        loadingSpinner.className = 'loading-spinner';
+        loadingSpinner.innerHTML = `
+            <div style="text-align: center; padding: 3rem;">
+                <div style="width: 50px; height: 50px; border: 4px solid #f3f4f6; border-top: 4px solid #667eea; border-radius: 50%; margin: 0 auto 1rem; animation: spin 1s linear infinite;"></div>
+                <p style="color: #6b7280;">Loading form...</p>
+            </div>
+        `;
+        
+        // Add spinner CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            .ripple {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.6);
+                transform: scale(0);
+                animation: ripple-animation 0.6s ease-out;
+                pointer-events: none;
+            }
+            @keyframes ripple-animation {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
                 }
-            });
-        }, observerOptions);
-
-        // Observe elements that should fade in
-        const elementsToObserve = document.querySelectorAll('.hero-image, .cta-button');
-        elementsToObserve.forEach(el => {
-            // Set initial state
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            
-            // Start observing
-            fadeInObserver.observe(el);
+            }
+        `;
+        document.head.appendChild(style);
+        
+        formWrapper.insertBefore(loadingSpinner, googleForm);
+        
+        googleForm.addEventListener('load', function() {
+            loadingSpinner.style.display = 'none';
         });
     }
 
-    /**
-     * Optional: Add ripple effect on button click
-     */
-    function createRipple(event) {
-        const button = event.currentTarget;
-        const ripple = document.createElement('span');
-        const diameter = Math.max(button.clientWidth, button.clientHeight);
-        const radius = diameter / 2;
-
-        const rect = button.getBoundingClientRect();
-        ripple.style.width = ripple.style.height = `${diameter}px`;
-        ripple.style.left = `${event.clientX - rect.left - radius}px`;
-        ripple.style.top = `${event.clientY - rect.top - radius}px`;
-        ripple.classList.add('ripple');
-
-        // Remove existing ripples
-        const existingRipple = button.getElementsByClassName('ripple')[0];
-        if (existingRipple) {
-            existingRipple.remove();
-        }
-
-        button.appendChild(ripple);
-
-        // Remove ripple after animation
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
-    }
-
-    // Add ripple effect styling dynamically
-    const style = document.createElement('style');
-    style.textContent = `
-        .cta-button {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
-            transform: scale(0);
-            animation: ripple-animation 0.6s ease-out;
-            pointer-events: none;
-        }
-        
-        @keyframes ripple-animation {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
+    // ===== Scroll to Top Button (Optional Enhancement) =====
+    const scrollToTopBtn = document.createElement('button');
+    scrollToTopBtn.innerHTML = `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
     `;
-    document.head.appendChild(style);
+    scrollToTopBtn.className = 'scroll-to-top';
+    scrollToTopBtn.style.cssText = `
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s ease;
+        z-index: 1000;
+    `;
+    
+    document.body.appendChild(scrollToTopBtn);
 
-    // Add ripple effect to button
-    redeemButton.addEventListener('mousedown', createRipple);
+    // Show/hide scroll to top button
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            scrollToTopBtn.style.display = 'flex';
+        } else {
+            scrollToTopBtn.style.display = 'none';
+        }
+    });
 
-    /**
-     * Log initialization for debugging
-     */
-    console.log('Premium webpage initialized successfully');
+    // Scroll to top functionality
+    scrollToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Hover effect for scroll to top button
+    scrollToTopBtn.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+        this.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+    });
+
+    scrollToTopBtn.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+    });
+
+    // ===== Console Welcome Message =====
+    console.log('%c👋 Welcome to Our Form Portal!', 'font-size: 20px; font-weight: bold; color: #667eea;');
+    console.log('%cBuilt with ❤️ using HTML, CSS, and JavaScript', 'font-size: 14px; color: #6b7280;');
 });
 
-/**
- * Handle page visibility changes
- * Pause animations when page is not visible to save resources
- */
-document.addEventListener('visibilitychange', function() {
-    if (document.hidden) {
-        console.log('Page is hidden - animations paused');
-    } else {
-        console.log('Page is visible - animations resumed');
+// ===== Prevent Right Click on Form (Optional Security) =====
+// Uncomment if you want to prevent right-click on the form
+/*
+document.addEventListener('contextmenu', function(e) {
+    if (e.target.closest('.form-wrapper')) {
+        e.preventDefault();
+        return false;
     }
 });
+*/
 
-/**
- * Optional: Add smooth scroll polyfill for older browsers
- */
-if (!('scrollBehavior' in document.documentElement.style)) {
-    // Smooth scroll polyfill would go here if needed
-    console.log('Smooth scroll not supported - consider adding polyfill');
-}
+// ===== Google Analytics (Optional) =====
+// Add your Google Analytics tracking code here if needed
+/*
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'YOUR-GA-TRACKING-ID');
+*/
+
+// ===== Performance Monitoring =====
+window.addEventListener('load', function() {
+    if (window.performance && window.performance.timing) {
+        const loadTime = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
+        console.log('Page loaded in ' + loadTime + 'ms');
+    }
+});
