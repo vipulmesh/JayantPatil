@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let isRevealed = false;
 
     /**
-     * Handle the redeem button click event
+     * Handle the buy button click event
      */
     function handleRedeemClick() {
         // Prevent multiple clicks
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add visual feedback to button
         redeemButton.classList.add('clicked');
-        redeemButton.textContent = 'Redeemed ✓';
+        redeemButton.textContent = 'Purchased ✓';
         redeemButton.setAttribute('aria-pressed', 'true');
 
         // Reveal the secondary image with animation
