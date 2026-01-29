@@ -3,58 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Modern professional webpage with responsive design">
-    <title>Premium Experience</title>
+    <meta name="description" content="Submit your details seamlessly with our modern form interface">
+    <title>Submit Your Details Seamlessly</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Header Section -->
-    <header class="header">
-        <div class="header-content">
-            <h1 class="site-title">Premium Experience</h1>
-        </div>
-    </header>
-
     <!-- Hero Section -->
-    <main class="hero-container">
-        <div class="hero-content">
-            <!-- Primary Hero Image -->
-            <div class="image-wrapper">
-                <img 
-                    src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop&q=80" 
-                    alt="Professional business team collaboration"
-                    class="hero-image"
-                    loading="eager"
-                />
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-image-wrapper">
+                    <img src="chinh.jpeg" 
+                         alt="Team collaboration" 
+                         class="hero-image"
+                         loading="eager">
+                </div>
+                <h1 class="hero-title">Jayant Patil</h1>
+
+                <button class="cta-button" id="scrollToForm">Fill the Form</button>
             </div>
-
-            <!-- Call to Action Button -->
-            <button 
-                class="cta-button" 
-                id="redeemButton"
-                aria-label="Buy now"
-            >
-                Buy Now
-            </button>
-
-            <!-- Secondary Image (Hidden Initially) -->
-            <div class="secondary-image-wrapper" id="secondaryImage" aria-hidden="true">
-                <img 
-                    src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&h=800&fit=crop&q=80" 
-                    alt="Successful business achievement"
-                    class="secondary-image"
-                    loading="lazy"
-                />
+            <div class="hero-decoration">
+                <div class="floating-card card-1"></div>
+                <div class="floating-card card-2"></div>
+                <div class="floating-card card-3"></div>
             </div>
         </div>
-    </main>
+    </section>
 
-    <!-- Footer Section -->
+    <!-- Form Section -->
+    <section class="form-section" id="formSection">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get Started</h2>
+                <p class="section-description">Fill out the form below and we'll get back to you shortly</p>
+            </div>
+            
+            <!-- Google Form Embed Container -->
+            <div class="form-container">
+                <div class="form-wrapper">
+                    <!-- Replace the src URL with your actual Google Form embed URL -->
+                    <!-- To get this: Open your Google Form → Click "Send" → Click the embed icon (<>) → Copy the iframe src URL -->
+                    <iframe 
+                        src="https://forms.gle/oLJ6SBthdVHKZbPr9" 
+                        width="100%" 
+                        height="800" 
+                        frameborder="0" 
+                        marginheight="0" 
+                        marginwidth="0"
+                        id="googleForm">
+                        Loading…
+                    </iframe>
+                    
+                    <!-- Alternative: Direct Link Button (uncomment if you prefer a button instead of embed) -->
+                    <!-- <div class="form-link-container">
+                        <p>Click below to open the form in a new tab:</p>
+                        <a href="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform" target="_blank" class="form-link-button">
+                            Open Form
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </div> -->
+                </div>
+            </div>
+
+            <!-- Success Message (hidden by default) -->
+            <div class="success-message" id="successMessage">
+                <div class="success-icon">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h3>Thank You!</h3>
+                <p>Your information has been submitted successfully.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <p class="footer-text">
-                Website by — <span class="brand">Studio Nexus</span>
-            </p>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">Website by — <span class="brand">Vipul Softwares</span></p>
+   
+            </div>
         </div>
     </footer>
 
