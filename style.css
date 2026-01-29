@@ -1,0 +1,355 @@
+/* ============================================
+   CSS RESET & BASE STYLES
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #2d3748;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================
+   HEADER SECTION
+   ============================================ */
+
+.header {
+    width: 100%;
+    padding: 1.5rem 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.site-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+    transition: transform 0.3s ease;
+}
+
+.site-title:hover {
+    transform: scale(1.02);
+}
+
+/* ============================================
+   HERO CONTAINER
+   ============================================ */
+
+.hero-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 160px);
+}
+
+.hero-content {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+/* ============================================
+   IMAGE STYLING
+   ============================================ */
+
+.image-wrapper,
+.secondary-image-wrapper {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        0 4px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-wrapper:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.15),
+        0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.hero-image,
+.secondary-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.image-wrapper:hover .hero-image {
+    transform: scale(1.02);
+}
+
+/* ============================================
+   SECONDARY IMAGE REVEAL ANIMATION
+   ============================================ */
+
+.secondary-image-wrapper {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: 
+        max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.5s ease,
+        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.secondary-image-wrapper.revealed {
+    max-height: 1000px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================
+   CALL TO ACTION BUTTON
+   ============================================ */
+
+.cta-button {
+    position: relative;
+    padding: 1rem 3rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 
+        0 8px 20px rgba(102, 126, 234, 0.4),
+        0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: 
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.3s ease;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Button hover effect */
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 12px 28px rgba(102, 126, 234, 0.5),
+        0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cta-button:hover::before {
+    opacity: 1;
+}
+
+.cta-button:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 4px 12px rgba(102, 126, 234, 0.4),
+        0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cta-button:focus {
+    outline: none;
+    box-shadow: 
+        0 8px 20px rgba(102, 126, 234, 0.4),
+        0 0 0 4px rgba(102, 126, 234, 0.2);
+}
+
+/* Button disabled state (after clicking) */
+.cta-button.clicked {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    box-shadow: 
+        0 8px 20px rgba(72, 187, 120, 0.4),
+        0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   FOOTER SECTION
+   ============================================ */
+
+.footer {
+    width: 100%;
+    padding: 2rem 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-text {
+    font-size: 0.9rem;
+    color: #718096;
+    letter-spacing: 0.5px;
+}
+
+.brand {
+    font-weight: 600;
+    color: #667eea;
+    transition: color 0.2s ease;
+}
+
+.brand:hover {
+    color: #764ba2;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - TABLET
+   ============================================ */
+
+@media (min-width: 640px) {
+    .header {
+        padding: 2rem 2rem;
+    }
+
+    .site-title {
+        font-size: 1.75rem;
+    }
+
+    .hero-container {
+        padding: 3rem 2rem;
+    }
+
+    .hero-content {
+        gap: 2.5rem;
+    }
+
+    .cta-button {
+        font-size: 1.25rem;
+        padding: 1.25rem 3.5rem;
+    }
+
+    .image-wrapper,
+    .secondary-image-wrapper {
+        border-radius: 20px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - DESKTOP
+   ============================================ */
+
+@media (min-width: 1024px) {
+    .header {
+        padding: 2rem 2rem;
+    }
+
+    .site-title {
+        font-size: 2rem;
+    }
+
+    .hero-container {
+        padding: 4rem 2rem;
+    }
+
+    .hero-content {
+        max-width: 1000px;
+        gap: 3rem;
+    }
+
+    .cta-button {
+        font-size: 1.375rem;
+        padding: 1.375rem 4rem;
+    }
+
+    .footer {
+        padding: 2.5rem 2rem;
+    }
+
+    .footer-text {
+        font-size: 1rem;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .cta-button {
+        border: 2px solid #ffffff;
+    }
+
+    .footer {
+        border-top: 2px solid #2d3748;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+.cta-button:focus-visible {
+    outline: 3px solid #667eea;
+    outline-offset: 4px;
+}
+
+/* ============================================
+   LOADING STATE (OPTIONAL)
+   ============================================ */
+
+img {
+    background-color: #e2e8f0;
+}
+
+img:not([src]) {
+    visibility: hidden;
+}
